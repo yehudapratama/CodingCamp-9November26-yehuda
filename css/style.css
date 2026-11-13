@@ -1,0 +1,558 @@
+/* ==========================================================================
+   Expense & Budget Visualizer — style.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Reset & base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hidden utility — must beat any other display rule */
+[hidden] {
+  display: none !important;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #1a1a2e;
+  background-color: #f0f2f5;
+}
+
+/* --------------------------------------------------------------------------
+   2. Layout — fluid container
+   -------------------------------------------------------------------------- */
+
+#app-container {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+header {
+  padding: 1.25rem 0 0.5rem;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: -0.01em;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. Card / section base
+   -------------------------------------------------------------------------- */
+
+main > section,
+main > div#monthly-summary {
+  background: #ffffff;
+  border: 1px solid #e2e6ea;
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+main > section h2,
+#monthly-summary h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #3a3a5c;
+}
+
+/* --------------------------------------------------------------------------
+   4. Error banners (top-of-page, outside the card system)
+   -------------------------------------------------------------------------- */
+
+#storage-error,
+#load-error,
+#delete-error,
+#category-storage-error {
+  background-color: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  margin: 0.5rem auto;
+  max-width: 860px;
+  width: calc(100% - 2rem);
+  font-size: 0.875rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. Balance Display
+   Always at the top of flow; sticky on scroll so it stays visible.
+   -------------------------------------------------------------------------- */
+
+#balance-display {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #1a1a2e;
+  color: #ffffff;
+  border-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+}
+
+#balance-display h2 {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a0a0c0;
+  margin-bottom: 0.25rem;
+}
+
+#balance-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #4ade80; /* green for positive / zero */
+}
+
+/* Visually distinct style for negative totals (Requirement 3.5) */
+#balance-display.balance--negative #balance-amount {
+  color: #f87171; /* red */
+}
+
+/* --------------------------------------------------------------------------
+   6. Add Transaction Form
+   -------------------------------------------------------------------------- */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #3a3a5c;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  background: #f8fafc;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: auto;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  background: #ffffff;
+}
+
+/* Remove number input spinners (optional cosmetic) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+.error-message {
+  font-size: 0.8125rem;
+  color: #dc2626;
+  min-height: 1.25rem; /* reserve space to prevent layout jump */
+  margin-bottom: 0.5rem;
+}
+
+#btn-add {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background-color: #6366f1;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+#btn-add:hover {
+  background-color: #4f46e5;
+}
+
+#btn-add:active {
+  transform: scale(0.98);
+}
+
+/* --------------------------------------------------------------------------
+   7. Transaction Controls row (sort + toggle)
+   -------------------------------------------------------------------------- */
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.controls-row label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #3a3a5c;
+  white-space: nowrap;
+}
+
+#sort-control {
+  flex: 1;
+  min-width: 160px;
+}
+
+#btn-toggle-view {
+  padding: 0.5rem 1rem;
+  background-color: #e0e7ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  white-space: nowrap;
+}
+
+#btn-toggle-view:hover {
+  background-color: #c7d2fe;
+}
+
+/* --------------------------------------------------------------------------
+   8. Transaction List
+   -------------------------------------------------------------------------- */
+
+/* The containing <section> removes default padding from the list */
+section[aria-label="Transaction list"] {
+  padding: 0;
+  overflow: hidden; /* clip border-radius */
+}
+
+#transaction-list {
+  list-style: none;
+  overflow-y: auto;
+  max-height: 360px;
+  /* Custom scrollbar (webkit) */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+#transaction-list::-webkit-scrollbar {
+  width: 6px;
+}
+#transaction-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.1s;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-item:hover {
+  background-color: #f8fafc;
+}
+
+.tx-name {
+  flex: 1 1 auto;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tx-category {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background-color: #e0e7ff;
+  color: #3730a3;
+  white-space: nowrap;
+}
+
+.tx-amount {
+  flex: 0 0 auto;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #1a1a2e;
+  white-space: nowrap;
+}
+
+.btn-delete {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.btn-delete:hover {
+  color: #dc2626;
+  background-color: #fee2e2;
+}
+
+/* Empty state */
+.tx-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.25rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   9. Monthly Summary
+   -------------------------------------------------------------------------- */
+
+#monthly-list {
+  list-style: none;
+  overflow-y: auto;
+  max-height: 360px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+#monthly-list::-webkit-scrollbar {
+  width: 6px;
+}
+#monthly-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.month-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.95rem;
+}
+
+.month-item:last-child {
+  border-bottom: none;
+}
+
+.month-item span:first-child {
+  font-weight: 500;
+  color: #3a3a5c;
+}
+
+.month-item span:last-child {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #1a1a2e;
+}
+
+/* Visually distinct style for negative monthly totals (Requirement 7.5) */
+.month-item--negative span:last-child {
+  color: #dc2626;
+}
+
+#monthly-empty {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+/* --------------------------------------------------------------------------
+   10. Pie Chart
+   -------------------------------------------------------------------------- */
+
+#chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#spending-chart {
+  max-width: 320px;
+  max-height: 320px;
+  width: 100%;
+}
+
+#chart-empty {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+/* --------------------------------------------------------------------------
+   11. Custom Category Form
+   -------------------------------------------------------------------------- */
+
+/* Reuses .form-group, input, .error-message styles from §6 */
+
+#category-form button[type="submit"] {
+  padding: 0.5rem 1.25rem;
+  background-color: #6366f1;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+#category-form button[type="submit"]:hover {
+  background-color: #4f46e5;
+}
+
+/* --------------------------------------------------------------------------
+   12. Responsive breakpoints
+   -------------------------------------------------------------------------- */
+
+/* ---- 320 px – 767 px (single-column, already the default) ---- */
+@media (max-width: 767px) {
+  header h1 {
+    font-size: 1.25rem;
+  }
+
+  #balance-amount {
+    font-size: 1.75rem;
+  }
+
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #sort-control,
+  #btn-toggle-view {
+    width: 100%;
+  }
+
+  .tx-category {
+    display: none; /* hide category badge on very small screens */
+  }
+}
+
+/* ---- 768 px and wider (two-column optional enhancement) ---- */
+@media (min-width: 768px) {
+  #app-container {
+    padding: 0 1.5rem 2.5rem;
+  }
+
+  header {
+    padding: 1.75rem 0 0.75rem;
+  }
+
+  header h1 {
+    font-size: 1.75rem;
+  }
+
+  #balance-amount {
+    font-size: 2.5rem;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  /* Full-width items */
+  #balance-display,
+  section[aria-label="Transaction controls"],
+  section[aria-label="Transaction list"],
+  #monthly-summary,
+  section[aria-label="Spending by category chart"] {
+    grid-column: 1 / -1;
+  }
+
+  /* Side-by-side: form | chart */
+  section[aria-labelledby="form-heading"] {
+    grid-column: 1;
+  }
+
+  section[aria-labelledby="category-form-heading"] {
+    grid-column: 2;
+  }
+
+  #transaction-list {
+    max-height: 420px;
+  }
+
+  #monthly-list {
+    max-height: 420px;
+  }
+
+  #spending-chart {
+    max-width: 400px;
+    max-height: 400px;
+  }
+}
+
+/* ---- 1024 px and wider ---- */
+@media (min-width: 1024px) {
+  #app-container {
+    padding: 0 2rem 3rem;
+  }
+
+  #transaction-list {
+    max-height: 480px;
+  }
+}
